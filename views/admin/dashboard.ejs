@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin | FREELANCE AMANAH</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body class="admin-page">
+  <div class="admin-layout">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <h2>💎 ADMIN</h2>
+        <small>Freelance Amanah</small>
+      </div>
+      
+      <nav class="sidebar-nav">
+        <a href="#" class="nav-item active" data-page="beranda" onclick="showPage('beranda')">
+          <span class="nav-icon">🏠</span> Beranda
+        </a>
+        <a href="#" class="nav-item" data-page="pengaturan" onclick="showPage('pengaturan')">
+          <span class="nav-icon">🔧</span> Pengaturan
+        </a>
+        <a href="#" class="nav-item" data-page="konfirmasi" onclick="showPage('konfirmasi')">
+          <span class="nav-icon">📋</span> Konfirmasi Setoran
+        </a>
+        <a href="#" class="nav-item" data-page="dataemail" onclick="showPage('dataemail')">
+          <span class="nav-icon">📩</span> Data Email
+        </a>
+      </nav>
+      
+      <div class="sidebar-footer">
+        <a href="/admin/logout" class="btn btn-danger btn-block btn-sm">🚪 Logout</a>
+      </div>
+      
+      <!-- Discord floating button -->
+      <a href="https://discord.gg/VhmgYdgxV" target="_blank" class="discord-float-admin" title="Join Discord">
+        <img src="https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/discord.svg" alt="Discord" class="discord-icon">
+      </a>
+    </aside>
+    
+    <!-- Main Content -->
+    <main class="main-content">
+      <!-- Clock -->
+      <div class="clock-display" id="clockDisplay"></div>
+      
+      <!-- ===== BERANDA PAGE ===== -->
+      <div class="page-content" id="page-beranda">
+        <h2>🏠 Beranda</h2>
+        
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-icon">📊</div>
+            <div class="stat-value" id="statTotalSetoran"><%= totalSetoran %></div>
+            <div class="stat-label">Total Setoran</div>
+          </div>
+          <div class="stat-card pending">
+            <div class="stat-icon">⏳</div>
+            <div class="stat-value" id="statPending"><%= pending %></div>
+            <div class="stat-label">PENDING</div>
+          </div>
+          <div class="stat-card accepted">
+            <div class="stat-icon">✅</div>
+            <div class="stat-value" id="statAccepted"><%= accepted %></div>
+            <div class="stat-label">ACCEPTED</div>
+          </div>
+          <div class="stat-card denied">
+            <div class="stat-icon">❌</div>
+            <div class="stat-value" id="statDenied"><%= denied %></div>
+            <div class="stat-label">DENIED</div>
+          </div>
+          <div class="stat-card bayaran">
+            <div class="stat-icon">💰</div>
+            <div class="stat-value" id="statBayaran">Rp <%= totalBayaran.toLocaleString('id-ID') %></div>
+            <div class="stat-label">Total Bayaran</div>
+          </div>
+        </div>
+        
+        <button class="btn btn-warning" onclick="manualReset()" style="margin-bottom:20px;">🔄 Reset Manual</button>
+        
+        <div class="section">
+          <h3>📜 History</h3>
+          <div class="table-wrapper">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Tanggal Reset</th>
+                  <th>Tipe</th>
+                  <th>Total Setoran</th>
+                  <th>Pending</th>
+                  <th>Accepted</th>
+                  <th>Denied</th>
+                  <th>Total Bayaran</th>
+                </tr>
+              </thead>
+              <tbody>
+                <% history.forEach(h => { %>
+                <tr>
+                  <td><%= h.reset_date %></td>
+                  <td><%= h.type %></td>
+                  <td><%= h.total_setoran %></td>
+                  <td><%= h.total_pending %></td>
+                  <td><%= h.total_accepted %></td>
+                  <td><%= h.total_denied %></td>
+                  <td>Rp <%= (h.total_bayaran || 0).toLocaleString('id-ID') %></td>
+                </tr>
+                <% }) %>
+                <% if (history.length === 0) { %>
+                <tr><td colspan="7" class="text-center">Belum ada history</td></tr>
+                <% } %>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      
+      <!-- ===== PENGATURAN PAGE ===== -->
+      <div class="page-content" id="page-pengaturan" style="display:none;">
+        <h2>🔧 Pengaturan</h2>
+        
+        <div class="section">
+          <h3>🔑 Ubah Password Admin</h3>
+          <div class="form-group">
+            <label>Password Baru</label>
+            <input type="password" id="newPassword" class="input-field" placeholder="Masukkan password baru">
+            <button class="btn btn-primary" onclick="changePassword()">Simpan Password</button>
+            <span class="success-msg" id="passwordMsg"></span>
+          </div>
+        </div>
+        
+        <div class="section">
+          <h3>💵 Catatan Harga Bayaran</h3>
+          <div class="form-group">
+            <label>Harga Bayaran per Setoran (Rp)</label>
+            <input type="number" id="bayaranHarga" class="input-field" value="<%= settings.bayaran_harga %>" placeholder="Contoh: 5000">
+            <button class="btn btn-primary" onclick="updateSetting('bayaran_harga', document.getElementById('bayaranHarga').value)">Simpan Harga</button>
+            <span class="success-msg" id="bayaranHargaMsg"></span>
+          </div>
+        </div>
+        
+        <div class="section">
+          <h3>⏰ Waktu Open Setoran</h3>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Jam Open</label>
+              <input type="number" id="openHour" class="input-field" value="<%= settings.open_hour %>" min="0" max="23">
+            </div>
+            <div class="form-group">
+              <label>Menit Open</label>
+              <input type="number" id="openMinute" class="input-field" value="<%= settings.open_minute %>" min="0" max="59">
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Jam Close</label>
+              <input type="number" id="closeHour" class="input-field" value="<%= settings.close_hour %>" min="0" max="23">
+            </div>
+            <div class="form-group">
+              <label>Menit Close</label>
+              <input type="number" id="closeMinute" class="input-field" value="<%= settings.close_minute %>" min="0" max="59">
+            </div>
+          </div>
+          <button class="btn btn-primary" onclick="updateSchedule()">Simpan Jadwal</button>
+          <span class="success-msg" id="scheduleMsg"></span>
+          <p style="margin-top:10px;color:#999;font-size:0.85rem;">
+            Status saat ini: 
+            <strong style="color:<%= setoranOpen ? '#4ecb71' : '#f87171' %>">
+              <%= setoranOpen ? '🟢 OPEN' : '🔴 CLOSE' %>
+            </strong>
+          </p>
+        </div>
+      </div>
+      
+      <!-- ===== KONFIRMASI SETORAN PAGE ===== -->
+      <div class="page-content" id="page-konfirmasi" style="display:none;">
+        <h2>📋 Konfirmasi Setoran</h2>
+        <div id="depositList">
+          <p>Memuat data...</p>
+        </div>
+      </div>
+      
+      <!-- ===== DATA EMAIL PAGE ===== -->
+      <div class="page-content" id="page-dataemail" style="display:none;">
+        <h2>📩 Data Email</h2>
+        
+        <div class="section">
+          <h3>Tambah Data Email</h3>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Username Email</label>
+              <input type="text" id="emailUsername" class="input-field" placeholder="Username email">
+            </div>
+            <div class="form-group">
+              <label>Sandi Email</label>
+              <input type="text" id="emailPassword" class="input-field" placeholder="Sandi email">
+            </div>
+          </div>
+          <button class="btn btn-primary" onclick="addEmail()">📩 Kirim Data</button>
+          <span class="success-msg" id="emailMsg"></span>
+        </div>
+        
+        <div class="section">
+          <h3>Daftar Email</h3>
+          <div id="emailList">
+            <p>Memuat data...</p>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+  
+  <script>
+    // Pass data to client
+    window.ADMIN_DATA = {
+      setoranOpen: <%= setoranOpen %>,
+      settings: <%- JSON.stringify(settings) %>
+    };
+  </script>
+  <script src="/js/admin.js"></script>
+</body>
+</html>

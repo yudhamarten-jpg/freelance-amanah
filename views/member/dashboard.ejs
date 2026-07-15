@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Member | FREELANCE AMANAH</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body class="member-page">
+  <div class="member-container">
+    <!-- Header -->
+    <div class="member-header">
+      <a href="/" class="back-btn">← Beranda</a>
+      <h1>💎 FREELANCE AMANAH</h1>
+      <div id="setoranStatusBadge" class="status-badge <%= setoranOpen ? 'open' : 'close' %>">
+        <%= setoranOpen ? '🟢 OPEN' : '🔴 CLOSE' %>
+      </div>
+    </div>
+    
+    <% if (!isLoggedIn) { %>
+    <!-- Auth Section -->
+    <div class="auth-tabs">
+      <button class="auth-tab active" onclick="switchAuth('login')">Login</button>
+      <button class="auth-tab" onclick="switchAuth('register')">Register</button>
+    </div>
+    
+    <div id="loginForm" class="auth-form">
+      <h2>👤 Login Member</h2>
+      <input type="text" id="loginUsername" class="input-field" placeholder="Username">
+      <input type="password" id="loginPassword" class="input-field" placeholder="Password">
+      <button class="btn btn-primary btn-block" onclick="memberLogin()">Masuk</button>
+      <p class="error-msg" id="loginError"></p>
+    </div>
+    
+    <div id="registerForm" class="auth-form" style="display:none;">
+      <h2>📝 Register Member</h2>
+      <input type="text" id="regUsername" class="input-field" placeholder="Buat Username">
+      <input type="password" id="regPassword" class="input-field" placeholder="Buat Password">
+      <button class="btn btn-primary btn-block" onclick="memberRegister()">Daftar</button>
+      <p class="error-msg" id="regError"></p>
+    </div>
+    <% } else { %>
+    
+    <!-- Logged in member view -->
+    <div class="member-session">
+      <span>👋 Welcome, <strong><%= memberUsername %></strong></span>
+      <a href="/member/logout" class="btn btn-sm btn-outline">Logout</a>
+    </div>
+    
+    <!-- Bayaran info -->
+    <div class="info-card" id="bayaranInfo">
+      <div class="info-icon">💵</div>
+      <div class="info-text">
+        <strong>Catatan Bayaran:</strong> Rp <%= parseInt(bayaranHarga || 0).toLocaleString('id-ID') %> per setoran
+      </div>
+    </div>
+    
+    <% if (setoranOpen if (setoranOpen && email.length > 0)if (setoranOpen && email.length > 0) emails.length > 0) { %>
+    <!-- Available Emails -->
+    <div class="section">
+      <h3>📧 Username Email Tersedia</h3>
+      <div class="email-grid">
+        <% emails.forEach(e => { %>
+        <div class="email-item">
+          <span class="email-username"><%= e.email_username %></span>
+        </div>
+        <% }) %>
+      </div>
+    </div>
+    <% } else if (setoranOpen) { %>
+    <div class="info-card warning">
+      <span>⚠️ Belum ada username email yang tersedia. Hubungi admin.</span>
+    </div>
+    <% } else { %>
+    <div class="info-card close-notice">
+      <span>🔒 Setoran sedang tutup hari ini. Silakan kembali saat jam open.</span>
+    </div>
+    <% } %>
+    
+    <% if (setoranOpen) { %>
+    <!-- Deposit Form -->
+    <div class="section">
+      <h3>📝 Form Setoran</h3>
+      <div class="form-group">
+        <label>Nama Discord</label>
+        <input type="text" id="discordName" class="input-field" placeholder="Nama Discord kamu">
+      </div>
+      <div class="form-group">
+        <label>Nomor WhatsApp</label>
+        <input type="text" id="waNumber" class="input-field" placeholder="Contoh: 08123456789">
+      </div>
+      <div class="form-group">
+        <label>Nomor E-Wallet DANA</label>
+        <input type="text" id="danaNumber" class="input-field" placeholder="Nomor DANA kamu">
+      </div>
+      <div class="form-group">
+        <label>Username Email yang Disetor</label>
+        <input type="text" id="emailToDeposit" class="input-field" placeholder="Masukkan username email">
+      </div>
+      <button class="btn btn-success btn-block" onclick="submitDeposit()">📤 Kirim Setoran</button>
+      <p class="success-msg" id="depositMsg"></p>
+    </div>
+    <% } %>
+    
+    <!-- Check Status -->
+    <div class="section">
+      <h3>🔍 Cek Status Setoran</h3>
+      <div class="form-group">
+        <label>Cari berdasarkan Nama Discord / No. WA</label>
+        <input type="text" id="searchStatus" class="input-field" placeholder="Masukkan nama discord atau no. WA">
+      </div>
+      <button class="btn btn-primary" onclick="checkStatus()">Cek Status</button>
+      <div id="statusResult" style="margin-top:15px;"></div>
+    </div>
+    
+    <% } %>
+  </div>
+  
+  <!-- Discord floating button -->
+  <a href="https://discord.gg/VhmgYdgxV" target="_blank" class="discord-float" title="Join Discord">
+    <img src="https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/discord.svg" alt="Discord" class="discord-icon">
+  </a>
+  
+  <script>
+    window.SETORAN_OPEN = <%= setoranOpen %>;
+  </script>
+  <script src="/js/member.js"></script>
+</body>
+</html>

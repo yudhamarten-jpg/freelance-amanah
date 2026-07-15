@@ -1,0 +1,17 @@
+{
+  "name": "freelance-amanah",
+  "version": "1.0.0",
+  "description": "Platform Manajemen Setoran Freelance Terpercaya",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "express-session": "^1.17.3",
+    "better-sqlite3": "^9.4.3",
+    "bcryptjs": "^2.4.3",
+    "moment": "^2.30.1"
+  }
+}

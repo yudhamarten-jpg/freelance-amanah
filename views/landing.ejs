@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FREELANCE AMANAH | Platform Manajemen Setoran Freelance Terpercaya</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body class="landing-page">
+  <div class="landing-container">
+    <div class="landing-logo">💎</div>
+    <h1 class="landing-title">FREELANCE AMANAH</h1>
+    <p class="landing-subtitle">Platform Manajemen Setoran Freelance Terpercaya</p>
+    
+    <div class="landing-buttons">
+      <button class="btn btn-primary btn-lg" onclick="showAdminLogin()">
+        <span class="btn-icon">🔐</span> HALAMAN ADMIN
+      </button>
+      <a href="/member" class="btn btn-secondary btn-lg">
+        <span class="btn-icon">👤</span> HALAMAN MEMBER
+      </a>
+    </div>
+    
+    <div class="landing-features">
+      <div class="feature-item">
+        <span class="feature-icon">🛡️</span>
+        <span>Aman & Terpercaya</span>
+      </div>
+      <div class="feature-item">
+        <span class="feature-icon">⚡</span>
+        <span>Cepat & Real-time</span>
+      </div>
+      <div class="feature-item">
+        <span class="feature-icon">🔒</span>
+        <span>Privasi Terjaga</span>
+      </div>
+    </div>
+    
+    <!-- Discord floating button -->
+    <a href="https://discord.gg/VhmgYdgxV" target="_blank" class="discord-float" title="Join Discord">
+      <img src="https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/discord.svg" alt="Discord" class="discord-icon">
+    </a>
+  </div>
+  
+  <!-- Admin Login Modal -->
+  <div class="modal-overlay" id="adminModal" style="display:none;">
+    <div class="modal">
+      <button class="modal-close" onclick="closeAdminLogin()">✕</button>
+      <h2>🔐 Akses Admin</h2>
+      <p>Masukkan Password Admin</p>
+      <input type="password" id="adminPassword" class="input-field" placeholder="Password">
+      <button class="btn btn-primary btn-block" onclick="loginAdmin()">Masuk</button>
+      <p class="error-msg" id="adminError"></p>
+    </div>
+  </div>
+  
+  <script src="/js/main.js"></script>
+</body>
+</html>
