@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Login - FREELANCE AMANAH</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    
+    body {
+      font-family: 'Inter', sans-serif;
+      background: linear-gradient(135deg, #0a0a0a 0%, #1a0a2e 50%, #0a0a0a 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      top: -50%; left: -50%;
+      width: 200%; height: 200%;
+      background: radial-gradient(ellipse at center, rgba(138, 43, 226, 0.08) 0%, transparent 70%);
+      animation: rotate 30s linear infinite;
+      z-index: 0;
+    }
+
+    @keyframes rotate { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+
+    .container {
+      position: relative;
+      z-index: 1;
+      width: 90%;
+      max-width: 400px;
+    }
+
+    .modal-box {
+      background: linear-gradient(135deg, #1a0a2e, #0f0a1a);
+      border: 1px solid rgba(124, 58, 237, 0.3);
+      border-radius: 20px;
+      padding: 30px;
+      text-align: center;
+    }
+
+    .modal-box h2 { font-size: 22px; margin-bottom: 8px; color: #c084fc; }
+    .modal-box p { font-size: 14px; color: rgba(255,255,255,0.4); margin-bottom: 24px; }
+
+    .form-group { margin-bottom: 16px; }
+    .form-group input {
+      width: 100%;
+      padding: 14px 16px;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(124, 58, 237, 0.3);
+      border-radius: 12px;
+      color: #fff;
+      font-size: 16px;
+      text-align: center;
+      letter-spacing: 2px;
+      outline: none;
+      transition: border-color 0.3s;
+    }
+    .form-group input:focus { border-color: #7c3aed; }
+
+    .btn-submit {
+      width: 100%;
+      padding: 14px;
+      background: linear-gradient(135deg, #7c3aed, #6d28d9);
+      border: none;
+      border-radius: 12px;
+      color: #fff;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s;
+      font-family: 'Inter', sans-serif;
+    }
+    .btn-submit:hover { opacity: 0.9; transform: translateY(-1px); }
+
+    .error-msg { color: #ef4444; font-size: 13px; margin-top: 12px; display: none; }
+
+    .btn-back {
+      display: block;
+      text-align: center;
+      margin-top: 16px;
+      color: rgba(255,255,255,0.3);
+      text-decoration: none;
+      font-size: 13px;
+      transition: color 0.2s;
+    }
+    .btn-back:hover { color: #c084fc; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="modal-box">
+      <h2>🔐 Akses Admin</h2>
+      <p>Masukkan password untuk masuk ke panel admin</p>
+      <div class="form-group">
+        <input type="password" id="adminPass" placeholder="Password" autocomplete="off" autofocus>
+      </div>
+      <p class="error-msg" id="adminError">Password salah!</p>
+      <button class="btn-submit" onclick="adminLogin()">Masuk</button>
+    </div>
+    <a href="/" class="btn-back">← Kembali ke Beranda</a>
+  </div>
+
+  <script>
+    document.getElementById('adminPass').addEventListener('keypress', function(e) {
+      if (e.key === 'Enter') adminLogin();
+    });
+
+    async function adminLogin() {
+      const password = document.getElementById('adminPass').value;
+      if (!password) {
+        document.getElementById('adminError').textContent = 'Masukkan password!';
+        document.getElementById('adminError').style.display = 'block';
+        return;
+      }
+      const res = await fetch('/admin/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ password })
+      });
+      const data = await res.json();
+      if (data.success) {
+        location.href = '/admin/dashboard';
+      } else {
+        document.getElementById('adminError').style.display = 'block';
+        document.getElementById('adminPass').value = '';
+        document.getElementById('adminPass').focus();
+      }
+    }
+  </script>
+</body>
+</html>
