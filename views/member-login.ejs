@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Member - FREELANCE AMANAH</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: linear-gradient(135deg, #0a0a0a 0%, #1a0a2e 50%, #0a0a0a 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      padding: 20px;
+    }
+    body::before {
+      content: '';
+      position: fixed;
+      top: -50%; left: -50%;
+      width: 200%; height: 200%;
+      background: radial-gradient(ellipse at center, rgba(138, 43, 226, 0.06) 0%, transparent 70%);
+      animation: rotate 30s linear infinite;
+      z-index: 0;
+    }
+    @keyframes rotate { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+    .container { position: relative; z-index: 1; width: 100%; max-width: 420px; }
+    .tabs {
+      display: flex; gap: 4px;
+      background: rgba(15, 10, 26, 0.8);
+      border-radius: 14px;
+      padding: 4px;
+      margin-bottom: 24px;
+      border: 1px solid rgba(124, 58, 237, 0.15);
+    }
+    .tab {
+      flex: 1;
+      padding: 12px;
+      text-align: center;
+      border-radius: 11px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 14px;
+      transition: all 0.3s;
+      color: rgba(255,255,255,0.4);
+      background: transparent;
+      border: none;
+      font-family: 'Inter', sans-serif;
+    }
+    .tab.active { background: linear-gradient(135deg, #7c3aed, #6d28d9); color: #fff; }
+    .form-box {
+      background: rgba(15, 10, 26, 0.8);
+      border: 1px solid rgba(124, 58, 237, 0.15);
+      border-radius: 20px;
+      padding: 30px;
+    }
+    .form-box h2 { font-size: 20px; font-weight: 700; margin-bottom: 6px; text-align: center; }
+    .form-box p { text-align: center; font-size: 13px; color: rgba(255,255,255,0.4); margin-bottom: 24px; }
+    .form-group { margin-bottom: 16px; }
+    .form-group label { display: block; font-size: 13px; color: rgba(255,255,255,0.5); margin-bottom: 6px; font-weight: 500; }
+    .form-group input {
+      width: 100%;
+      padding: 14px 16px;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(124, 58, 237, 0.2);
+      border-radius: 12px;
+      color: #fff;
+      font-size: 15px;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    .form-group input:focus { border-color: #7c3aed; }
+    .btn-submit {
+      width: 100%;
+      padding: 14px;
+      background: linear-gradient(135deg, #7c3aed, #6d28d9);
+      border: none;
+      border-radius: 12px;
+      color: #fff;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      margin-top: 8px;
+      transition: all 0.3s;
+      font-family: 'Inter', sans-serif;
+    }
+    .btn-submit:hover { transform: translateY(-1px); box-shadow: 0 8px 25px rgba(124, 58, 237, 0.3); }
+    .btn-back { display: block; text-align: center; margin-top: 16px; color: rgba(255,255,255,0.4); text-decoration: none; font-size: 13px; }
+    .btn-back:hover { color: #c084fc; }
+    .msg { text-align: center; margin-top: 12px; font-size: 13px; display: none; }
+    .msg.error { color: #ef4444; display: block; }
+    .msg.success { color: #34d399; display: block; }
+    .back-home { position: fixed; top: 20px; left: 20px; color: rgba(255,255,255,0.3); text-decoration: none; font-size: 13px; z-index: 10; }
+    .back-home:hover { color: #c084fc; }
+  </style>
+</head>
+<body>
+  <a href="/" class="back-home">← Kembali</a>
+  <div class="container">
+    <div class="tabs">
+      <button class="tab active" onclick="switchTab('login')">Masuk</button>
+      <button class="tab" onclick="switchTab('register')">Daftar</button>
+    </div>
+    <div class="form-box" id="loginForm">
+      <h2>👉 Selamat Datang!</h2>
+      <p>Login untuk mulai menyetor</p>
+      <div class="form-group"><label>Username</label><input type="text" id="loginUser" placeholder="Username kamu" autocomplete="off"></div>
+      <div class="form-group"><label>Password</label><input type="password" id="loginPass" placeholder="Password" autocomplete="off"></div>
+      <button class="btn-submit" onclick="doLogin()">Masuk Sekarang</button>
+      <div class="msg" id="loginMsg"></div>
+    </div>
+    <div class="form-box" id="registerForm" style="display:none;">
+      <h2>📟 Daftar Akun</h2>
+      <p>Buat akun untuk mulai freelance</p>
+      <div class="form-group"><label>Username</label><input type="text" id="regUser" placeholder="Pilih username (min. 3 karakter)" autocomplete="off"></div>
+      <div class="form-group"><label>Password</label><input type="password" id="regPass" placeholder="Buat password (min. 4 karakter)" autocomplete="off"></div>
+      <button class="btn-submit" onclick="doRegister()">Daftar Sekarang</button>
+      <div class="msg" id="regMsg"></div>
+    </div>
+  </div>
+  <script>
+    function switchTab(tab) {
+      document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+      if (tab === 'login') {
+        document.querySelectorAll('.tab')[0].classList.add('active');
+        document.getElementById('loginForm').style.display = 'block';
+        document.getElementById('registerForm').style.display = 'none';
+      } else {
+        document.querySelectorAll('.tab')[1].classList.add('active');
+        document.getElementById('loginForm').style.display = 'none';
+        document.getElementById('registerForm').style.display = 'block';
+      }
+      document.getElementById('loginMsg').className = 'msg';
+      document.getElementById('regMsg').className = 'msg';
+    }
+    document.getElementById('loginPass').addEventListener('keypress', e => { if (e.key === 'Enter') doLogin(); });
+    document.getElementById('regPass').addEventListener('keypress', e => { if (e.key === 'Enter') doRegister(); });
+    async function doLogin() {
+      const msg = document.getElementById('loginMsg');
+      const username = document.getElementById('loginUser').value.trim();
+      const password = document.getElementById('loginPass').value;
+      if (!username || !password) { msg.className = 'msg error'; msg.textContent = 'Semua field harus diisi!'; return; }
+      const res = await fetch('/member/api/login', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ username, password }) });
+      const data = await res.json();
+      if (data.success) { msg.className = 'msg success'; msg.textContent = 'Login berhasil!'; setTimeout(() => location.href = '/member/dashboard', 500); }
+      else { msg.className = 'msg error'; msg.textContent = data.message; }
+    }
+    async function doRegister() {
+      const msg = document.getElementById('regMsg');
+      const username = document.getElementById('regUser').value.trim();
+      const password = document.getElementById('regPass').value;
+      if (!username || !password) { msg.className = 'msg error'; msg.textContent = 'Semua field harus diisi!'; return; }
+      if (username.length < 3) { msg.className = 'msg error'; msg.textContent = 'Username minimal 3 karakter!'; return; }
+      if (password.length < 4) { msg.className = 'msg error'; msg.textContent = 'Password minimal 4 karakter!'; return; }
+      const res = await fetch('/member/api/register', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ username, password }) });
+      const data = await res.json();
+      if (data.success) { msg.className = 'msg success'; msg.textContent = data.message; setTimeout(() => switchTab('login'), 1000); document.getElementById('loginUser').value = username; }
+      else { msg.className = 'msg error'; msg.textContent = data.message; }
+    }
+  </script>
+</body>
+</html>
