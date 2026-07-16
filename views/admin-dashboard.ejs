@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin - FREELANCE AMANAH</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Inter', sans-serif; background: #080810; color: #fff; display: flex; min-height: 100vh; }
+  </style>
+</head>
+<body>
+  <div style="padding:24px">
+    <h1>📡 Freelance Amanah - Admin</h1>
+    <div id="clock" style="color:#c084fc;font-size:20px;margin-top:10px;">--</div>
+  </div>
+<script>
+setInterval(()=>{const d=new Date();document.getElementById('clock').textContent=d.toLocaleDateString('id-ID',{weekday:'short',year:'numeric',month:'short',day:'numeric',hour:'2-digit',minute:'2-digit',second:'2-digit'})},1000);
+</script>
+</body>
+</html>
