@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard Member - FREELANCE AMANAH</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #080810;
+      color: #fff;
+      min-height: 100vh;
+    }
+
+    .header {
+      background: linear-gradient(135deg, #0f0a1a, #0a0515);
+      border-bottom: 1px solid rgba(124, 58, 237, 0.15);
+      padding: 16px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+      position: sticky;
+      top: 0;
+      z-index: 50;
+    }
+
+    .header-left h2 {
+      font-size: 18px;
+      font-weight: 700;
+      background: linear-gradient(135deg, #7c3aed, #c084fc);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .header-left small {
+      color: rgba(255,255,255,0.4);
+      font-size: 12px;
+    }
+
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .harga-badge {
+      background: rgba(52, 211, 153, 0.1);
+      border: 1px solid rgba(52, 211, 153, 0.2);
+      padding: 8px 14px;
+      border-radius: 10px;
+      font-size: 13px;
+      color: #34d399;
+      font-weight: 600;
+    }
+
+    .status-badge {
+      padding: 8px 16px;
+      border-radius: 10px;
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 1px;
+    }
+
+    .status-open {
+      background: rgba(52, 211, 153, 0.1);
+      color: #34d399;
+      border: 1px solid rgba(52, 211, 153, 0.2);
+      animation: pulse 2s infinite;
+    }
+
+    .status-close {
+      background: rgba(239, 68, 68, 0.1);
+      color: #ef4444;
+      border: 1px solid rgba(239, 68, 68, 0.2);
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.6; }
+    }
+
+    .btn {
+      padding: 10px 20px;
+      border: none;
+      border-radius: 10px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s;
+      font-family: 'Inter', sans-serif;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #7c3aed, #6d28d9);
+      color: #fff;
+    }
+
+    .btn-primary:hover { opacity: 0.9; }
+
+    .btn-outline {
+      background: transparent;
+      border: 1px solid rgba(124, 58, 237, 0.3);
+      color: #c084fc;
+    }
+
+    .btn-outline:hover { background: rgba(124, 58, 237, 0.1); }
+
+    .btn-logout {
+      background: transparent;
+      border: 1px solid rgba(239, 68, 68, 0.3);
+      color: #ef4444;
+      font-size: 12px;
+      padding: 6px 14px;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+
+    .panel {
+      background: rgba(15, 10, 26, 0.5);
+      border: 1px solid rgba(124, 58, 237, 0.15);
+      border-radius: 16px;
+      padding: 24px;
+      margin-bottom: 20px;
+    }
+
+    .panel h3 {
+      font-size: 16px;
+      font-weight: 600;
+      margin-bottom: 16px;
+      color: #c084fc;
+    }
+
+    .form-group {
+      margin-bottom: 14px;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 13px;
+      color: rgba(255,255,255,0.5);
+      margin-bottom: 6px;
+    }
+
+    .form-group input, .form-group select {
+      width: 100%;
+      padding: 12px 14px;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(124, 58, 237, 0.2);
+      border-radius: 10px;
+      color: #fff;
+      font-size: 14px;
+      outline: none;
+      font-family: 'Inter', sans-serif;
+    }
+
+    .form-group input:focus { border-color: #7c3aed; }
+
+    .email-list {
+      max-height: 400px;
+      overflow-y: auto;
+    }
+
+    .email-item {
+      padding: 12px 16px;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.05);
+      border-radius: 10px;
+      margin-bottom: 8px;
+      font-size: 14px;
+      color: rgba(255,255,255,0.6);
+    }
+
+    .email-item .username {
+      font-weight: 600;
+      color: rgba(255,255,255,0.8);
+    }
+
+    .table-wrapper {
+      overflow-x: auto;
+      border-radius: 12px;
+      border: 1px solid rgba(124, 58, 237, 0.1);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+    }
+
+    th, td {
+      padding: 10px 12px;
+      text-align: left;
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+    }
+
+    th {
+      background: rgba(124, 58, 237, 0.08);
+      color: rgba(255,255,255,0.5);
+      font-weight: 500;
+      font-size: 11px;
+    }
+
+    .badge {
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 600;
+    }
+
+    .badge-pending { background: rgba(251, 191, 36, 0.15); color: #fbbf24; }
+    .badge-accepted { background: rgba(52, 211, 153, 0.15); color: #34d399; }
+    .badge-denied { background: rgba(239, 68, 68, 0.15); color: #ef4444; }
+
+    .empty-state {
+      text-align: center;
+      padding: 40px;
+      color: rgba(255,255,255,0.3);
+    }
+
+    .toast {
+      position: fixed;
+      top: 20px; right: 20px;
+      padding: 14px 24px;
+      border-radius: 12px;
+      color: #fff;
+      z-index: 999;
+      animation: slideIn 0.3s;
+      display: none;
+      font-weight: 500;
+      font-size: 14px;
+    }
+
+    .toast-success { background: #059669; }
+    .toast-error { background: #dc2626; }
+
+    @keyframes slideIn {
+      from { transform: translateX(100%); opacity: 0; }
+      to { transform: translateX(0); opacity: 1; }
+    }
+
+    .close-msg {
+      text-align: center;
+      padding: 40px 20px;
+    }
+
+    .close-msg .icon { font-size: 48px; margin-bottom: 12px; }
+    .close-msg p { color: rgba(255,255,255,0.4); font-size: 14px; }
+
+    .tabs { display: flex; gap: 4px; margin-bottom: 16px; }
+    .tab {
+      flex: 1;
+      padding: 10px;
+      text-align: center;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 500;
+      background: rgba(255,255,255,0.03);
+      color: rgba(255,255,255,0.4);
+      border: 1px solid rgba(255,255,255,0.05);
+      font-family: 'Inter', sans-serif;
+    }
+    .tab.active { background: rgba(124, 58, 237, 0.1); color: #c084fc; border-color: rgba(124, 58, 237, 0.3); }
+
+    .discord-float {
+      position: fixed;
+      bottom: 30px; right: 30px;
+      width: 60px; height: 60px;
+      background: #5865F2;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      box-shadow: 0 4px 20px rgba(88, 101, 242, 0.4);
+      transition: all 0.3s;
+      z-index: 100;
+      text-decoration: none;
+    }
+
+    .discord-float:hover { transform: scale(1.1); }
+    .discord-float svg { width: 30px; height: 30px; fill: white; }
+
+    @media (max-width: 480px) {
+      .container { padding: 12px; }
+      .header { padding: 12px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <div class="header-left">
+      <h2>🛡️ FREELANCE AMANAH</h2>
+      <small>Selamat datang, <%= memberName %></small>
+    </div>
+    <div class="header-right">
+      <div class="harga-badge">💰 Rp <%= parseInt(harga).toLocaleString('id-ID') %> / email</div>
+      <% if (isOpen) { %>
+        <div class="status-badge status-open">🟢 OPEN</div>
+      <% } else { %>
+        <div class="status-badge status-close">🔴 CLOSE</div>
+      <% } %>
+      <a href="/member/logout" class="btn-logout">Keluar</a>
+    </div>
+  </div>
+
+  <div class="container">
+    <% if (!isOpen) { %>
+      <div class="panel close-msg">
+        <div class="icon">🔒</div>
+        <h3>Setoran Sedang Tutup</h3>
+        <p>Setoran buka pukul <%= jamOpen %> - <%= jamClose %> WIB. Silakan kembali nanti!</p>
+      </div>
+    <% } else { %>
+      <!-- Setor Email -->
+      <div class="panel">
+        <h3>📤 Form Setoran</h3>
+        <div class="form-group">
+          <label>Username Email yang Dibuat</label>
+          <input type="text" id="emailSetor" placeholder="contoh: user123@gmail.com">
+        </div>
+        <div class="form-group">
+          <label>Nama Discord</label>
+          <input type="text" id="discordSetor" placeholder="username#0000">
+        </div>
+        <div class="form-group">
+          <label>Nomor WhatsApp</label>
+          <input type="text" id="waSetor" placeholder="08xxxxxxxxxx">
+        </div>
+        <div class="form-group">
+          <label>Nomor e-Wallet DANA</label>
+          <input type="text" id="danaSetor" placeholder="08xxxxxxxxxx">
+        </div>
+        <button class="btn btn-primary" onclick="submitSetoran()" style="width:100%;">🚀 Kirim Setoran</button>
+      </div>
+
+      <!-- Daftar Email Tersedia -->
+      <div class="panel">
+        <h3>📋 Email Tersedia (<%= emails.length %>)</h3>
+        <% if (emails.length === 0) { %>
+          <div class="empty-state">📭 Belum ada email tersedia</div>
+        <% } else { %>
+          <div class="email-list">
+            <% emails.forEach(function(email) { %>
+              <div class="email-item">
+                <span class="username"><%= email.username_email %></span>
+                <span style="color: rgba(255,255,255,0.3); margin-left: 8px;"><%= email.password_email %></span>
+              </div>
+            <% }); %>
+          </div>
+        <% } %>
+      </div>
+    <% } %>
+
+    <!-- Riwayat Setoran -->
+    <div class="panel">
+      <h3>📜 Riwayat Setoran Saya</h3>
+      <% if (submissions.length === 0) { %>
+        <div class="empty-state">Belum ada setoran</div>
+      <% } else { %>
+        <div class="table-wrapper">
+          <table>
+            <thead><tr><th>Email</th><th>Discord</th><th>WA</th><th>DANA</th><th>Status</th><th>Tanggal</th></tr></thead>
+            <tbody>
+              <% submissions.forEach(function(s) { %>
+                <tr>
+                  <td><%= s.username_email %></td>
+                  <td><%= s.discord_name || '-' %></td>
+                  <td><%= s.wa_number || '-' %></td>
+                  <td><%= s.dana_number || '-' %></td>
+                  <td><span class="badge badge-<%= s.status %>"><%= s.status %></span></td>
+                  <td><%= new Date(s.submitted_at).toLocaleDateString('id-ID', {day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'}) %></td>
+                </tr>
+              <% }); %>
+            </tbody>
+          </table>
+        </div>
+      <% } %>
+    </div>
+
+    <!-- Cek Status -->
+    <div class="panel">
+      <h3>🔍 Cek Status Setoran</h3>
+      <div class="tabs">
+        <button class="tab active" onclick="switchCheckTab('discord')">Via Discord</button>
+        <button class="tab" onclick="switchCheckTab('wa')">Via WhatsApp</button>
+      </div>
+      <div id="checkDiscord">
+        <div class="form-group">
+          <label>Nama Discord</label>
+          <input type="text" id="checkDiscordInput" placeholder="Masukkan nama Discord">
+        </div>
+        <button class="btn btn-outline" onclick="checkStatus('discord')" style="width:100%;">Cek Status</button>
+      </div>
+      <div id="checkWA" style="display:none;">
+        <div class="form-group">
+          <label>Nomor WhatsApp</label>
+          <input type="text" id="checkWAInput" placeholder="Masukkan nomor WA">
+        </div>
+        <button class="btn btn-outline" onclick="checkStatus('wa')" style="width:100%;">Cek Status</button>
+      </div>
+      <div id="checkResult" style="margin-top:16px;"></div>
+    </div>
+  </div>
+
+  <!-- Discord Float -->
+  <a href="https://discord.gg/VhmgYdgxV" target="_blank" class="discord-float">
+    <svg viewBox="0 0 24 24"><path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028 14.09 14.09 0 0 0 1.226-1.994.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/></svg>
+  </a>
+
+  <div class="toast" id="toast"></div>
+
+  <script>
+    function showToast(msg, type) {
+      const t = document.getElementById('toast');
+      t.textContent = msg;
+      t.className = 'toast toast-' + type;
+      t.style.display = 'block';
+      setTimeout(() => t.style.display = 'none', 3000);
+    }
+
+    async function submitSetoran() {
+      const email = document.getElementById('emailSetor').value.trim();
+      const discord = document.getElementById('discordSetor').value.trim();
+      const wa = document.getElementById('waSetor').value.trim();
+      const dana = document.getElementById('danaSetor').value.trim();
+
+      if (!email) return showToast('Username email harus diisi!', 'error');
+
+      const res = await fetch('/member/api/submit', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username_email: email, discord_name: discord, wa_number: wa, dana_number: dana })
+      });
+      const data = await res.json();
+      if (data.success) {
+        showToast(data.message, 'success');
+        document.getElementById('emailSetor').value = '';
+        setTimeout(() => location.reload(), 1500);
+      } else {
+        showToast(data.message, 'error');
+      }
+    }
+
+    function switchCheckTab(tab) {
+      document.querySelectorAll('.tabs .tab').forEach((t, i) => {
+        t.classList.toggle('active', (tab === 'discord' && i === 0) || (tab === 'wa' && i === 1));
+      });
+      document.getElementById('checkDiscord').style.display = tab === 'discord' ? 'block' : 'none';
+      document.getElementById('checkWA').style.display = tab === 'wa' ? 'block' : 'none';
+      document.getElementById('checkResult').innerHTML = '';
+    }
+
+    async function checkStatus(type) {
+      const discord = document.getElementById('checkDiscordInput').value.trim();
+      const wa = document.getElementById('checkWAInput').value.trim();
+      
+      if (type === 'discord' && !discord) return showToast('Masukkan nama Discord!', 'error');
+      if (type === 'wa' && !wa) return showToast('Masukkan nomor WA!', 'error');
+
+      const res = await fetch('/member/api/check-status', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ discord_name: type === 'discord' ? discord : '', wa_number: type === 'wa' ? wa : '' })
+      });
+      const data = await res.json();
+
+      const result = document.getElementById('checkResult');
+      if (!data.success || data.submissions.length === 0) {
+        result.innerHTML = '<div class="empty-state">🔍 Tidak ditemukan setoran dengan data tersebut</div>';
+        return;
+      }
+
+      result.innerHTML = `
+        <div class="table-wrapper">
+          <table>
+            <thead><tr><th>Email</th><th>Status</th><th>Tanggal</th></tr></thead>
+            <tbody>
+              ${data.submissions.map(s => `
+                <tr>
+                  <td>${s.username_email}</td>
+                  <td><span class="badge badge-${s.status}">${s.status}</span></td>
+                  <td>${new Date(s.submitted_at).toLocaleDateString('id-ID', {day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'})}</td>
+                </tr>
+              `).join('')}
+            </tbody>
+          </table>
+        </div>
+      `;
+    }
+  </script>
+</body>
+</html>
