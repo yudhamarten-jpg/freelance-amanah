@@ -1,3 +1,4 @@
+CTYPE html>
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -7,16 +8,687 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
-    body { font-family: 'Inter', sans-serif; background: #080810; color: #fff; display: flex; min-height: 100vh; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #080810;
+      color: #fff;
+      display: flex;
+      min-height: 100vh;
+    }
+
+    /* Sidebar */
+    .sidebar {
+      width: 260px;
+      min-width: 260px;
+      background: linear-gradient(180deg, #0f0a1a, #0a0515);
+      border-right: 1px solid rgba(124, 58, 237, 0.15);
+      padding: 20px 0;
+      display: flex;
+      flex-direction: column;
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 100vh;
+      z-index: 50;
+      overflow-y: auto;
+    }
+
+    .sidebar-header {
+      padding: 0 20px 20px;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+      margin-bottom: 10px;
+    }
+
+    .sidebar-header h2 {
+      font-size: 18px;
+      font-weight: 700;
+      background: linear-gradient(135deg, #7c3aed, #c084fc);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .sidebar-header small {
+      color: rgba(255,255,255,0.4);
+      font-size: 11px;
+    }
+
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 14px 20px;
+      cursor: pointer;
+      transition: all 0.2s;
+      border-left: 3px solid transparent;
+      color: rgba(255,255,255,0.6);
+      font-size: 14px;
+      font-weight: 500;
+      text-decoration: none;
+    }
+
+    .nav-item:hover {
+      background: rgba(124, 58, 237, 0.08);
+      color: #fff;
+    }
+
+    .nav-item.active {
+      background: rgba(124, 58, 237, 0.12);
+      border-left-color: #7c3aed;
+      color: #c084fc;
+    }
+
+    .nav-item .icon { font-size: 18px; width: 24px; text-align: center; }
+
+    .nav-logout {
+      margin-top: auto;
+      color: #ef4444 !important;
+    }
+
+    /* Main Content */
+    .main {
+      flex: 1;
+      margin-left: 260px;
+      padding: 24px;
+      min-height: 100vh;
+    }
+
+    .main-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 24px;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .main-header h1 {
+      font-size: 22px;
+      font-weight: 700;
+    }
+
+    .clock {
+      background: rgba(124, 58, 237, 0.1);
+      border: 1px solid rgba(124, 58, 237, 0.2);
+      padding: 10px 18px;
+      border-radius: 12px;
+      font-size: 14px;
+      font-weight: 600;
+      font-variant-numeric: tabular-nums;
+      color: #c084fc;
+      letter-spacing: 1px;
+      min-width: 200px;
+      text-align: center;
+    }
+
+    .page {
+      display: none;
+    }
+
+    .page.active {
+      display: block;
+    }
+
+    /* Cards */
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+
+    .card {
+      background: linear-gradient(135deg, rgba(124, 58, 237, 0.08), rgba(15, 10, 26, 0.5));
+      border: 1px solid rgba(124, 58, 237, 0.15);
+      border-radius: 16px;
+      padding: 20px;
+      text-align: center;
+    }
+
+    .card .label {
+      font-size: 12px;
+      color: rgba(255,255,255,0.5);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 8px;
+    }
+
+    .card .value {
+      font-size: 28px;
+      font-weight: 800;
+      color: #c084fc;
+    }
+
+    .card.pending .value { color: #fbbf24; }
+    .card.accepted .value { color: #34d399; }
+    .card.denied .value { color: #ef4444; }
+    .card.bayaran .value { color: #f472b6; }
+
+    /* Panel */
+    .panel {
+      background: rgba(15, 10, 26, 0.5);
+      border: 1px solid rgba(124, 58, 237, 0.15);
+      border-radius: 16px;
+      padding: 24px;
+      margin-bottom: 20px;
+    }
+
+    .panel h3 {
+      font-size: 16px;
+      font-weight: 600;
+      margin-bottom: 16px;
+      color: #c084fc;
+    }
+
+    .form-group {
+      margin-bottom: 14px;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 13px;
+      color: rgba(255,255,255,0.5);
+      margin-bottom: 6px;
+    }
+
+    .form-group input, .form-group textarea, .form-group select {
+      width: 100%;
+      padding: 12px 14px;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(124, 58, 237, 0.2);
+      border-radius: 10px;
+      color: #fff;
+      font-size: 14px;
+      outline: none;
+      font-family: 'Inter', sans-serif;
+      transition: border-color 0.2s;
+    }
+
+    .form-group textarea { min-height: 120px; resize: vertical; }
+    .form-group input:focus, .form-group textarea:focus { border-color: #7c3aed; }
+
+    .row { display: flex; gap: 12px; flex-wrap: wrap; }
+    .row .form-group { flex: 1; min-width: 150px; }
+
+    .btn {
+      padding: 10px 20px;
+      border: none;
+      border-radius: 10px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-family: 'Inter', sans-serif;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #7c3aed, #6d28d9);
+      color: #fff;
+    }
+
+    .btn-primary:hover { opacity: 0.9; transform: translateY(-1px); }
+
+    .btn-success { background: #059669; color: #fff; }
+    .btn-success:hover { opacity: 0.9; }
+
+    .btn-danger { background: #dc2626; color: #fff; }
+    .btn-danger:hover { opacity: 0.9; }
+
+    .btn-warning { background: #d97706; color: #fff; }
+    .btn-sm { padding: 6px 12px; font-size: 12px; border-radius: 8px; }
+
+    .btn-outline {
+      background: transparent;
+      border: 1px solid rgba(124, 58, 237, 0.3);
+      color: #c084fc;
+    }
+
+    .btn-outline:hover { background: rgba(124, 58, 237, 0.1); }
+
+    /* Table */
+    .table-wrapper {
+      overflow-x: auto;
+      border-radius: 12px;
+      border: 1px solid rgba(124, 58, 237, 0.1);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+    }
+
+    th, td {
+      padding: 12px 14px;
+      text-align: left;
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+    }
+
+    th {
+      background: rgba(124, 58, 237, 0.08);
+      color: rgba(255,255,255,0.5);
+      font-weight: 500;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    tr:hover { background: rgba(124, 58, 237, 0.04); }
+
+    .badge {
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+    }
+
+    .badge-pending { background: rgba(251, 191, 36, 0.15); color: #fbbf24; }
+    .badge-accepted { background: rgba(52, 211, 153, 0.15); color: #34d399; }
+    .badge-denied { background: rgba(239, 68, 68, 0.15); color: #ef4444; }
+    .badge-available { background: rgba(124, 58, 237, 0.15); color: #c084fc; }
+    .badge-submitted { background: rgba(59, 130, 246, 0.15); color: #60a5fa; }
+
+    .flex { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+    .mt-4 { margin-top: 16px; }
+    .mb-4 { margin-bottom: 16px; }
+    .text-center { text-align: center; }
+    .w-full { width: 100%; }
+
+    .toast {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      padding: 14px 24px;
+      border-radius: 12px;
+      color: #fff;
+      font-weight: 500;
+      z-index: 999;
+      animation: slideIn 0.3s ease;
+      display: none;
+    }
+
+    @keyframes slideIn {
+      from { transform: translateX(100%); opacity: 0; }
+      to { transform: translateX(0); opacity: 1; }
+    }
+
+    .toast-success { background: #059669; }
+    .toast-error { background: #dc2626; }
+
+    @media (max-width: 768px) {
+      .sidebar {
+        display: none;
+        width: 100%;
+        position: fixed;
+        z-index: 100;
+      }
+      .sidebar.open { display: flex; }
+      .main { margin-left: 0; }
+      .mobile-nav {
+        display: flex !important;
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: #0f0a1a;
+        border-top: 1px solid rgba(124, 58, 237, 0.2);
+        z-index: 100;
+        padding: 8px;
+        justify-content: space-around;
+      }
+    }
+
+    .mobile-nav {
+      display: none;
+    }
+
+    .mobile-nav-btn {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      background: none;
+      border: none;
+      color: rgba(255,255,255,0.4);
+      font-size: 10px;
+      cursor: pointer;
+      padding: 6px;
+      font-family: 'Inter', sans-serif;
+    }
+
+    .mobile-nav-btn.active { color: #c084fc; }
+    .mobile-nav-btn .mi { font-size: 20px; }
   </style>
 </head>
 <body>
-  <div style="padding:24px">
-    <h1>📡 Freelance Amanah - Admin</h1>
-    <div id="clock" style="color:#c084fc;font-size:20px;margin-top:10px;">--</div>
+  <!-- Sidebar -->
+  <div class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <h2>🛡️ FREELANCE AMANAH</h2>
+      <small>Admin Panel</small>
+    </div>
+    <a class="nav-item active" data-page="beranda" onclick="showPage('beranda')">
+      <span class="icon">🏠</span> Beranda
+    </a>
+    <a class="nav-item" data-page="pengaturan" onclick="showPage('pengaturan')">
+      <span class="icon">🔧</span> Pengaturan
+    </a>
+    <a class="nav-item" data-page="konfirmasi" onclick="showPage('konfirmasi')">
+      <span class="icon">📋</span> Konfirmasi Setoran
+    </a>
+    <a class="nav-item" data-page="dataemail" onclick="showPage('dataemail')">
+      <span class="icon">📩</span> Data Email
+    </a>
+    <a class="nav-item nav-logout" href="/admin/logout">🚪 Logout</a>
   </div>
-<script>
-setInterval(()=>{const d=new Date();document.getElementById('clock').textContent=d.toLocaleDateString('id-ID',{weekday:'short',year:'numeric',month:'short',day:'numeric',hour:'2-digit',minute:'2-digit',second:'2-digit'})},1000);
-</script>
+
+  <!-- Main -->
+  <div class="main" id="mainContent">
+    <div class="main-header">
+      <h1 id="pageTitle">🏠 Beranda</h1>
+      <div class="clock" id="clock">--</div>
+    </div>
+
+    <!-- BERANDA -->
+    <div class="page active" id="page-beranda">
+      <div class="cards" id="statsCards">
+        <div class="card"><div class="label">📊 Total Setoran</div><div class="value" id="statTotal">0</div></div>
+        <div class="card pending"><div class="label">⏳ Pending</div><div class="value" id="statPending">0</div></div>
+        <div class="card accepted"><div class="label">✅ Accepted</div><div class="value" id="statAccepted">0</div></div>
+        <div class="card denied"><div class="label">❌ Denied</div><div class="value" id="statDenied">0</div></div>
+        <div class="card bayaran"><div class="label">💰 Total Bayaran</div><div class="value" id="statBayaran">Rp 0</div></div>
+      </div>
+      
+      <div class="flex mb-4" style="gap:10px;">
+        <button class="btn btn-danger btn-sm" onclick="resetStats()">🔄 Reset 24 Jam</button>
+        <button class="btn btn-outline btn-sm" onclick="refreshStats()">🔄 Refresh</button>
+      </div>
+
+      <div class="panel">
+        <h3>📜 Riwayat Reset</h3>
+        <div class="table-wrapper">
+          <table>
+            <thead>
+              <tr><th>Tanggal</th><th>Total Setoran</th><th>Pending</th><th>Accepted</th><th>Denied</th><th>Bayaran</th></tr>
+            </thead>
+            <tbody id="historyBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- PENGATURAN -->
+    <div class="page" id="page-pengaturan">
+      <div class="panel">
+        <h3>🔑 Ubah Password Admin</h3>
+        <div class="form-group">
+          <label>Password Baru</label>
+          <input type="text" id="newPassword" placeholder="Masukkan password baru">
+        </div>
+        <button class="btn btn-primary" onclick="updatePassword()">Simpan Password</button>
+      </div>
+
+      <div class="panel">
+        <h3>💰 Harga Bayaran Per Email</h3>
+        <div class="form-group">
+          <label>Harga (Rp)</label>
+          <input type="number" id="hargaBayaran" value="<%= settings.harga_bayaran || '1000' %>" placeholder="Masukkan harga">
+        </div>
+        <button class="btn btn-primary" onclick="updateHarga()">Simpan Harga</button>
+      </div>
+
+      <div class="panel">
+        <h3>⏰ Waktu Open / Close Setoran</h3>
+        <div class="row">
+          <div class="form-group">
+            <label>Jam Open</label>
+            <input type="time" id="jamOpen" value="<%= settings.jam_open || '08:00' %>">
+          </div>
+          <div class="form-group">
+            <label>Jam Close</label>
+            <input type="time" id="jamClose" value="<%= settings.jam_close || '20:00' %>">
+          </div>
+        </div>
+        <button class="btn btn-primary" onclick="updateJam()">Simpan Waktu</button>
+      </div>
+    </div>
+
+    <!-- KONFIRMASI -->
+    <div class="page" id="page-konfirmasi">
+      <div class="panel">
+        <h3>📋 Daftar Setoran Member</h3>
+        <div class="table-wrapper">
+          <table>
+            <thead>
+              <tr><th>Member</th><th>Discord</th><th>WA</th><th>DANA</th><th>Email</th><th>Status</th><th>Aksi</th></tr>
+            </thead>
+            <tbody id="submissionsBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- DATA EMAIL -->
+    <div class="page" id="page-dataemail">
+      <div class="panel">
+        <h3>📩 Input Data Email</h3>
+        <div class="form-group">
+          <label>Format: username:password (satu baris satu email)</label>
+          <textarea id="emailInput" placeholder="contoh:&#10;user1@gmail.com:sgsg1122&#10;user2@gmail.com:sgsg1122"></textarea>
+        </div>
+        <div class="flex" style="gap:10px;">
+          <button class="btn btn-primary" onclick="addEmails()">➕ Tambah Email</button>
+          <button class="btn btn-success" onclick="sendEmails()">📤 Kirim Data ke Member</button>
+          <button class="btn btn-danger btn-sm" onclick="clearEmails()">🗑 Hapus Semua</button>
+        </div>
+      </div>
+
+      <div class="panel">
+        <h3>📋 Daftar Email</h3>
+        <div class="table-wrapper">
+          <table>
+            <thead><tr><th>Username</th><th>Password</th><th>Status</th></tr></thead>
+            <tbody id="emailsBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Mobile nav -->
+  <div class="mobile-nav" id="mobileNav">
+    <button class="mobile-nav-btn active" onclick="showPage('beranda')"><span class="mi">🏠</span>Beranda</button>
+    <button class="mobile-nav-btn" onclick="showPage('pengaturan')"><span class="mi">🔧</span>Pengaturan</button>
+    <button class="mobile-nav-btn" onclick="showPage('konfirmasi')"><span class="mi">📋</span>Konfirmasi</button>
+    <button class="mobile-nav-btn" onclick="showPage('dataemail')"><span class="mi">📩</span>Email</button>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <script>
+    // Clock
+    function updateClock() {
+      const now = new Date();
+      const options = { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit' };
+      document.getElementById('clock').textContent = now.toLocaleDateString('id-ID', options);
+    }
+    updateClock();
+    setInterval(updateClock, 1000);
+
+    // Page navigation
+    function showPage(page) {
+      document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+      document.getElementById('page-' + page).classList.add('active');
+      
+      document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+      document.querySelector('[data-page="' + page + '"]').classList.add('active');
+      
+      document.querySelectorAll('.mobile-nav-btn').forEach(b => b.classList.remove('active'));
+      
+      const titles = { beranda: '🏠 Beranda', pengaturan: '🔧 Pengaturan', konfirmasi: '📋 Konfirmasi Setoran', dataemail: '📩 Data Email' };
+      document.getElementById('pageTitle').textContent = titles[page];
+
+      if (page === 'beranda') refreshStats();
+      if (page === 'konfirmasi') loadSubmissions();
+      if (page === 'dataemail') loadEmails();
+    }
+
+    // Toast
+    function showToast(msg, type) {
+      const t = document.getElementById('toast');
+      t.textContent = msg;
+      t.className = 'toast toast-' + type;
+      t.style.display = 'block';
+      setTimeout(() => t.style.display = 'none', 3000);
+    }
+
+    // Stats
+    async function refreshStats() {
+      const res = await fetch('/admin/api/stats');
+      const s = await res.json();
+      document.getElementById('statTotal').textContent = s.total_setoran || 0;
+      document.getElementById('statPending').textContent = s.total_pending || 0;
+      document.getElementById('statAccepted').textContent = s.total_accepted || 0;
+      document.getElementById('statDenied').textContent = s.total_denied || 0;
+      document.getElementById('statBayaran').textContent = 'Rp ' + ((s.total_bayaran || 0)).toLocaleString('id-ID');
+    }
+
+    async function resetStats() {
+      if (!confirm('Reset statistik (kecuali Total Setoran)? Data akan masuk ke history.')) return;
+      const res = await fetch('/admin/api/reset-stats', { method: 'POST' });
+      const data = await res.json();
+      if (data.success) { refreshStats(); loadHistory(); showToast('Statistik berhasil direset!', 'success'); }
+    }
+
+    async function loadHistory() {
+      const res = await fetch('/admin/api/stats');
+      // Load from server-rendered history
+      location.reload();
+    }
+
+    // Settings
+    async function updatePassword() {
+      const pass = document.getElementById('newPassword').value;
+      if (!pass) return showToast('Password tidak boleh kosong!', 'error');
+      const res = await fetch('/admin/api/settings', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ key: 'admin_password', value: pass })
+      });
+      const d = await res.json();
+      if (d.success) showToast('Password berhasil diubah!', 'success');
+    }
+
+    async function updateHarga() {
+      const harga = document.getElementById('hargaBayaran').value;
+      if (!harga) return showToast('Harga tidak boleh kosong!', 'error');
+      const res = await fetch('/admin/api/settings', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ key: 'harga_bayaran', value: harga })
+      });
+      const d = await res.json();
+      if (d.success) showToast('Harga berhasil diubah!', 'success');
+    }
+
+    async function updateJam() {
+      const open = document.getElementById('jamOpen').value;
+      const close = document.getElementById('jamClose').value;
+      await fetch('/admin/api/settings', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ key: 'jam_open', value: open }) });
+      await fetch('/admin/api/settings', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ key: 'jam_close', value: close }) });
+      showToast('Waktu berhasil diubah!', 'success');
+    }
+
+    // Emails
+    async function addEmails() {
+      const emails = document.getElementById('emailInput').value.trim();
+      if (!emails) return showToast('Masukkan data email!', 'error');
+      const res = await fetch('/admin/api/emails', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ emails })
+      });
+      const d = await res.json();
+      if (d.success) { showToast(d.count + ' email berhasil ditambahkan!', 'success'); document.getElementById('emailInput').value = ''; loadEmails(); }
+    }
+
+    async function sendEmails() {
+      const res = await fetch('/admin/api/emails/send', { method: 'POST' });
+      const d = await res.json();
+      if (d.success) showToast('Data email berhasil dikirim ke member!', 'success');
+    }
+
+    async function clearEmails() {
+      if (!confirm('Hapus semua email?')) return;
+      const res = await fetch('/admin/api/emails/clear', { method: 'POST' });
+      const d = await res.json();
+      if (d.success) { showToast('Semua email dihapus!', 'success'); loadEmails(); }
+    }
+
+    async function loadEmails() {
+      const res = await fetch('/admin/api/emails');
+      const emails = await res.json();
+      const tbody = document.getElementById('emailsBody');
+      tbody.innerHTML = emails.map(e => `
+        <tr>
+          <td>${e.username_email}</td>
+          <td>${e.password_email}</td>
+          <td><span class="badge badge-${e.status}">${e.status}</span></td>
+        </tr>
+      `).join('');
+    }
+
+    // Submissions
+    async function loadSubmissions() {
+      const res = await fetch('/admin/api/submissions');
+      const subs = await res.json();
+      const tbody = document.getElementById('submissionsBody');
+      tbody.innerHTML = subs.map(s => `
+        <tr>
+          <td>${s.member_name || '-'}</td>
+          <td>${s.discord_name || '-'}</td>
+          <td>${s.wa_number || '-'}</td>
+          <td>${s.dana_number || '-'}</td>
+          <td>${s.username_email}</td>
+          <td><span class="badge badge-${s.status}">${s.status}</span></td>
+          <td>
+            ${s.status === 'pending' ? `
+              <div class="flex">
+                <button class="btn btn-success btn-sm" onclick="updateSubStatus(${s.id}, 'accepted')">✅ ACC</button>
+                <button class="btn btn-danger btn-sm" onclick="updateSubStatus(${s.id}, 'denied')">❌ Tolak</button>
+              </div>
+            ` : `<small>${s.status === 'accepted' ? '✅ Diterima' : '❌ Ditolak'}</small>`}
+          </td>
+        </tr>
+      `).join('');
+    }
+
+    async function updateSubStatus(id, status) {
+      const res = await fetch('/admin/api/submissions/' + id + '/status', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ status })
+      });
+      const d = await res.json();
+      if (d.success) { loadSubmissions(); refreshStats(); showToast('Status diupdate!', 'success'); }
+    }
+
+    // Initial load
+    refreshStats();
+
+    // History from server
+    const historyData = <%- JSON.stringify(history || []) %>;
+    document.getElementById('historyBody').innerHTML = historyData.map(h => `
+      <tr>
+        <td>${new Date(h.reset_at).toLocaleDateString('id-ID', { day:'numeric', month:'short', year:'numeric', hour:'2-digit', minute:'2-digit' })}</td>
+        <td>${h.total_setoran}</td>
+        <td>${h.total_pending}</td>
+        <td>${h.total_accepted}</td>
+        <td>${h.total_denied}</td>
+        <td>Rp ${(h.total_bayaran || 0).toLocaleString('id-ID')}</td>
+      </tr>
+    `).join('');
+  </script>
 </body>
 </html>
